@@ -1,24 +1,36 @@
 import { Notify } from 'notiflix';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getMoviesByQuery } from '../api/api';
 import SearchForm from '../Components/SearchForm';
 import MoviesList from '../Components/MoviesList/MoviesList';
-import { QueryContext } from '../Components/App';
+import { useLocation, useNavigate } from 'react-router-dom';
+import qs from 'qs';
 
 const MoviesView = () => {
-  // const [query, setQuery] = useState('');
+  const [query, setQuery] = useState('');
   const [movies, setMovies] = useState([]);
+  const { search, pathname } = useLocation();
+  const navigate = useNavigate();
 
-  const { query, setQuery } = useContext(QueryContext);
+  useEffect(() => {
+    if (search.includes('query')) {
+      setQuery(qs.parse(search.replace('?', '')).query);
+      return;
+    }
+    setQuery('');
+  }, [search]);
 
   useEffect(() => {
     let cancelled = false;
 
-    query &&
+    !query && setMovies([]);
+
+    if (query) {
+      navigate(`${pathname}?query=${query}`);
       getMoviesByQuery(query)
         .then(data => !cancelled && setMovies(data))
         .catch(() => Notify.failure('Something went wrong!'));
-
+    }
     return () => {
       cancelled = true;
     };
