@@ -1,14 +1,16 @@
 import { Notify } from 'notiflix';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { getMoviesByQuery } from '../api/api';
 import SearchForm from '../Components/SearchForm';
 import MoviesList from '../Components/MoviesList/MoviesList';
 import { useLocation, useNavigate } from 'react-router-dom';
 import qs from 'qs';
+import { QueryContext } from '../Components/App';
 
 const MoviesView = () => {
-  const [query, setQuery] = useState('');
   const [movies, setMovies] = useState([]);
+
+  const { query, setQuery } = useContext(QueryContext);
   const { search, pathname } = useLocation();
   const navigate = useNavigate();
 

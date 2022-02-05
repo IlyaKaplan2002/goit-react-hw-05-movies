@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { QueryContext } from '../App';
 import styles from './goBackButtton.module.css';
 
 const GoBackButton = () => {
   const navigate = useNavigate();
+  const { query } = useContext(QueryContext);
 
-  const goBack = () => navigate(-1);
+  const goBack = () => (query ? navigate('/movies') : navigate('/'));
 
   return (
     <button className={styles.button} type="button" onClick={goBack}>
